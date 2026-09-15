@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Claim your voucher - Community Learning Vouchers</title>
+<link rel='stylesheet' href='styles.css'>
+</head>
+<body>
+<a class='skip-link' href='#main'>Skip to content</a>
+<header class='app-header'>
+  <div>
+    <p class='eyebrow'>Synthetic QA fixture</p>
+    <h1>Claim your learning voucher</h1>
+    <p>Use the voucher code from your award letter. We check it against current programme records.</p>
+  </div>
+</header>
+<main id='main' tabindex='-1'>
+  <div id='claim-errors' class='error-summary' tabindex='-1' hidden></div>
+  <form id='claim-form' novalidate>
+    <div class='field'>
+      <label for='claim-code'>Voucher code</label>
+      <input id='claim-code' name='code' type='text' autocomplete='off' aria-describedby='claim-code-hint claim-code-error'>
+      <p class='hint' id='claim-code-hint'>For example CLV-104.</p>
+      <p class='field-error' id='claim-code-error'></p>
+    </div>
+    <div class='field'>
+      <label for='claim-name'>Full name</label>
+      <input id='claim-name' name='name' type='text' autocomplete='name' aria-describedby='claim-name-error'>
+      <p class='field-error' id='claim-name-error'></p>
+    </div>
+    <div class='field'>
+      <label for='claim-email'>Email address</label>
+      <input id='claim-email' name='email' type='email' autocomplete='email' aria-describedby='claim-email-error'>
+      <p class='field-error' id='claim-email-error'></p>
+    </div>
+    <button type='submit' class='primary'>Submit claim</button>
+  </form>
+  <section id='claim-result' class='result-panel reveal' hidden aria-live='polite'>
+    <h2>Claim received</h2>
+    <p>We&rsquo;ve received the claim for voucher <strong id='claim-result-code'></strong>. Keep the voucher code for your records.</p>
+    <ol class='steps'>
+      <li>We check the voucher against current programme records.</li>
+      <li>We email you when the review is complete.</li>
+    </ol>
+  </section>
+  <p style='margin-top:24px'><a href='index.html'>Back to the admin dashboard</a></p>
+</main>
+<script src='shared.js'></script>
+<script src='claim.js'></script>
+</body>
+</html>
