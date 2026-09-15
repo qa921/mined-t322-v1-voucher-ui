@@ -1,1 +1,330 @@
-<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Community Learning Vouchers</title><link rel='stylesheet' href='styles.css'></head><body><main><header><p class='eyebrow'>Synthetic QA fixture</p><h1>Community Learning Vouchers</h1><p>Baseline application awaiting interaction and chart redesign.</p></header><section class='summary'><article><strong>3</strong><span>Applications</span></article><article><strong>£1,125</strong><span>Total value</span></article></section><section class='chart' aria-label='Status chart placeholder'><h2>Status distribution</h2><p>Chart placeholder. Derive this from the status mapping and current records.</p></section><section><h2>Voucher records</h2><table><thead><tr><th>ID</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody id='rows'></tbody></table></section></main><script src='app.js'></script></body></html>
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Community Learning Vouchers</title>
+<link rel='stylesheet' href='styles.css'>
+</head>
+<body>
+<a class='skip-link' href='#main'>Skip to content</a>
+<header class='app-header'>
+  <div>
+    <p class='eyebrow'>Synthetic QA fixture</p>
+    <h1>Community Learning Vouchers</h1>
+    <p>Daily voucher administration for the Community Learning Vouchers programme.</p>
+  </div>
+  <button type='button' class='command-trigger' data-command-palette-open>Command menu <kbd>Ctrl K</kbd></button>
+</header>
+<div class='app-shell'>
+<nav class='side-nav' aria-label='Admin sections'>
+  <details class='nav-group' open>
+    <summary>Daily work</summary>
+    <ul>
+      <li><a href='#voucher-records' data-nav>Voucher records</a></li>
+      <li><a href='#follow-up' data-nav>Follow-up queue</a></li>
+      <li><a href='#generate' data-nav>Voucher generation</a></li>
+      <li><a href='#orders' data-nav>Orders</a></li>
+    </ul>
+  </details>
+  <details class='nav-group nav-group-secondary'>
+    <summary>Content &amp; communications</summary>
+    <ul>
+      <li><a href='#mail-history' data-nav>Mail history</a></li>
+      <li><a href='#mail-templates' data-nav>Mail templates</a></li>
+      <li><a href='#composer' data-nav>Composer</a></li>
+      <li><a href='#template-library' data-nav>Template library</a></li>
+      <li><a href='#placeholders' data-nav>Placeholders</a></li>
+    </ul>
+  </details>
+  <details class='nav-group nav-group-secondary'>
+    <summary>Programmes</summary>
+    <ul>
+      <li><a href='#webinars' data-nav>Webinars</a></li>
+      <li><a href='#lms-import' data-nav>LMS import</a></li>
+      <li><a href='#import-history' data-nav>Import history</a></li>
+      <li><a href='#tutorial' data-nav>Tutorial</a></li>
+    </ul>
+  </details>
+  <details class='nav-group nav-group-secondary'>
+    <summary>Settings</summary>
+    <ul>
+      <li><a href='#admin-accounts' data-nav>Administrator accounts</a></li>
+      <li><a href='#display' data-nav>Display</a></li>
+      <li><a href='#about' data-nav>About</a></li>
+    </ul>
+  </details>
+  <p class='nav-footer'><a href='claim.html'>Public claim page</a></p>
+</nav>
+<main id='main'>
+
+  <section class='view' data-view='voucher-records'>
+    <h2>Voucher records</h2>
+    <section class='summary' aria-label='Voucher summary'>
+      <article><strong id='summary-count'>3</strong><span>Applications</span></article>
+      <article><strong id='summary-total'>&pound;1,125</strong><span>Total value</span></article>
+    </section>
+    <section class='chart' aria-label='Status chart'>
+      <h2>Status distribution</h2>
+      <div class='donut-wrap'>
+        <div id='donut'></div>
+        <ul id='donut-legend' class='donut-legend'></ul>
+      </div>
+      <details class='inline-details'>
+        <summary>Chart data as a table</summary>
+        <table id='donut-table'></table>
+      </details>
+    </section>
+    <div class='table-scroll'>
+    <table id='voucher-table'>
+      <caption>Voucher records. Sort by applicant code, submitted date, voucher amount, or status.</caption>
+      <thead><tr>
+        <th>Select</th>
+        <th data-key='id'>Applicant code</th>
+        <th data-key='date'>Submitted date</th>
+        <th data-key='amount'>Voucher amount</th>
+        <th data-key='status'>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class='view' data-view='follow-up' hidden>
+    <h2>Follow-up queue</h2>
+    <p>Outstanding follow-ups for voucher applications. Row selection and pending actions are kept while you sort.</p>
+    <div class='table-scroll'>
+    <table id='followup-table'>
+      <thead><tr>
+        <th>Select</th>
+        <th data-key='voucher'>Voucher</th>
+        <th data-key='due'>Due date</th>
+        <th data-key='priority'>Priority</th>
+        <th data-key='status'>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <div id='followup-actions' class='filter-row' style='margin-top:16px'>
+      <button type='button' class='primary' id='followup-send'>Send reminders</button>
+    </div>
+  </section>
+
+  <section class='view' data-view='generate' hidden>
+    <h2>Voucher generation</h2>
+    <form id='generate-form' novalidate>
+      <div class='field'>
+        <label for='gen-count'>Number of vouchers</label>
+        <input id='gen-count' type='number' min='1' max='50' value='10'>
+        <p class='hint'>Between 1 and 50.</p>
+      </div>
+      <div class='field'>
+        <label for='gen-amount'>Voucher amount (&pound;)</label>
+        <input id='gen-amount' type='number' min='1' step='1' value='250'>
+      </div>
+      <p id='gen-error' class='field-error' role='alert'></p>
+      <button type='submit' class='primary'>Generate vouchers</button>
+    </form>
+    <section id='gen-result' class='result-panel reveal' hidden aria-live='polite'>
+      <p id='gen-result-text'></p>
+    </section>
+  </section>
+
+  <section class='view' data-view='orders' hidden>
+    <h2>Orders</h2>
+    <div class='table-scroll'>
+    <table id='orders-table'>
+      <thead><tr>
+        <th data-key='order'>Order</th>
+        <th data-key='date'>Order date</th>
+        <th data-key='amount'>Amount</th>
+        <th data-key='status'>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <div id='orders-actions' class='filter-row' style='margin-top:16px'>
+      <button type='button' class='secondary' id='orders-export'>Export orders</button>
+    </div>
+  </section>
+
+  <section class='view' data-view='mail-history' hidden>
+    <h2>Mail history</h2>
+    <div class='table-scroll'>
+    <table id='mail-history-table'>
+      <thead><tr>
+        <th>Select</th>
+        <th data-key='subject'>Subject</th>
+        <th data-key='sent'>Send date</th>
+        <th data-key='recipients'>Recipients</th>
+        <th data-key='status'>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class='view' data-view='mail-templates' hidden>
+    <h2>Mail templates</h2>
+    <div class='filter-row'>
+      <label for='template-status-filter'>Status</label>
+      <select id='template-status-filter'>
+        <option>All</option>
+        <option>Active</option>
+        <option>Draft</option>
+      </select>
+    </div>
+    <div class='table-scroll'>
+    <table id='mail-templates-table'>
+      <thead><tr>
+        <th data-key='name'>Template</th>
+        <th data-key='updated'>Last updated</th>
+        <th data-key='status'>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class='view' data-view='composer' hidden>
+    <h2>Composer</h2>
+    <div id='composer-errors' class='error-summary' tabindex='-1' hidden></div>
+    <form id='composer-form' novalidate>
+      <div class='field'>
+        <label for='composer-subject'>Subject</label>
+        <input id='composer-subject' type='text'>
+      </div>
+      <div class='field'>
+        <label for='composer-body'>Message</label>
+        <textarea id='composer-body' rows='6'></textarea>
+      </div>
+      <button type='submit' class='primary'>Send message</button>
+      <button type='button' class='secondary' id='composer-save'>Save draft</button>
+    </form>
+  </section>
+
+  <section class='view' data-view='template-library' hidden>
+    <h2>Template library</h2>
+    <div class='field'>
+      <label for='library-search'>Search templates</label>
+      <input id='library-search' type='search'>
+    </div>
+    <div class='card-list' id='library-list'>
+      <article data-template='Approval notice'><strong>Approval notice</strong><span>Sent when a voucher is approved.</span></article>
+      <article data-template='Eligibility review request'><strong>Eligibility review request</strong><span>Asks the applicant for review evidence.</span></article>
+      <article data-template='Redemption receipt'><strong>Redemption receipt</strong><span>Confirms a redemption to the applicant.</span></article>
+      <article data-template='Webinar invite'><strong>Webinar invite</strong><span>Invites learners to an upcoming webinar.</span></article>
+    </div>
+  </section>
+
+  <section class='view' data-view='placeholders' hidden>
+    <h2>Placeholders</h2>
+    <p>Tokens you can insert into mail templates. Descriptions and copy behaviour are unchanged.</p>
+    <ul>
+      <li><span class='token'>{{applicant_name}}</span> Applicant&rsquo;s full name
+        <button type='button' class='secondary' data-copy-token='{{applicant_name}}'>Copy</button></li>
+      <li><span class='token'>{{voucher_code}}</span> Voucher code, for example CLV-104
+        <button type='button' class='secondary' data-copy-token='{{voucher_code}}'>Copy</button></li>
+      <li><span class='token'>{{voucher_amount}}</span> Voucher amount in pounds
+        <button type='button' class='secondary' data-copy-token='{{voucher_amount}}'>Copy</button></li>
+      <li><span class='token'>{{programme_name}}</span> Programme name
+        <button type='button' class='secondary' data-copy-token='{{programme_name}}'>Copy</button></li>
+    </ul>
+  </section>
+
+  <section class='view' data-view='webinars' hidden>
+    <h2>Webinars</h2>
+    <p>Webinar roster. Selection and filters are kept while you sort.</p>
+    <div class='table-scroll'>
+    <table id='roster-table'>
+      <thead><tr>
+        <th>Select</th>
+        <th data-key='attendee'>Attendee</th>
+        <th data-key='session'>Session date</th>
+        <th data-key='attendance'>Sessions attended</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class='view' data-view='lms-import' hidden>
+    <h2>LMS import</h2>
+    <div id='import-panel'>
+      <p>Import learner records from the LMS. Mapping, validation, and exception handling are unchanged.</p>
+      <button type='button' class='primary' id='import-run'>Run import</button>
+      <progress id='import-progress' max='100' value='0' hidden>Import running</progress>
+    </div>
+    <section id='import-result' class='result-panel reveal' hidden aria-live='polite'>
+      <p>Import finished. No mapping or validation changes were made.</p>
+    </section>
+  </section>
+
+  <section class='view' data-view='import-history' hidden>
+    <h2>Import history</h2>
+    <div class='table-scroll'>
+    <table id='import-history-table'>
+      <thead><tr>
+        <th data-key='name'>Import</th>
+        <th data-key='importedAt'>Imported at</th>
+        <th data-key='records'>Records</th>
+        <th data-key='status'>Status</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class='view' data-view='tutorial' hidden>
+    <h2>Tutorial</h2>
+    <p>Your progress is saved on this device.</p>
+    <ol class='steps'>
+      <li><label><input type='checkbox' data-tutorial-step='tour'> Take the dashboard tour</label></li>
+      <li><label><input type='checkbox' data-tutorial-step='sort'> Sort the voucher records table</label></li>
+      <li><label><input type='checkbox' data-tutorial-step='palette'> Open the command menu with Ctrl K or Cmd K</label></li>
+    </ol>
+    <p><a href='https://github.com/qa921/mined-t322-v1-voucher-ui' rel='external'>Read the project notes on GitHub</a></p>
+  </section>
+
+  <section class='view' data-view='admin-accounts' hidden>
+    <h2>Administrator accounts</h2>
+    <p>Role and status safeguards are unchanged. Deactivation always asks for confirmation first.</p>
+    <div class='table-scroll'>
+    <table id='accounts-table'>
+      <thead><tr>
+        <th data-key='name'>Name</th>
+        <th data-key='role'>Role</th>
+        <th data-key='lastActive'>Last active</th>
+        <th data-key='status'>Status</th>
+        <th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class='view' data-view='display' hidden>
+    <h2>Display</h2>
+    <fieldset>
+      <legend>Theme</legend>
+      <p><label><input type='radio' name='theme' value='system'> Use system setting</label></p>
+      <p><label><input type='radio' name='theme' value='light'> Light</label></p>
+      <p><label><input type='radio' name='theme' value='dark'> Dark</label></p>
+    </fieldset>
+    <p><label><input type='checkbox' id='density-compact'> Compact tables</label></p>
+  </section>
+
+  <section class='view' data-view='about' hidden>
+    <h2>About</h2>
+    <p>Synthetic QA fixture for the Community Learning Vouchers admin UI.</p>
+    <h3>Voucher statuses, in order</h3>
+    <ol id='status-glossary'></ol>
+    <p>Statuses are never merged or renamed. Chart counts always derive from the current records.</p>
+  </section>
+
+</main>
+</div>
+<script src='shared.js'></script>
+<script src='app.js'></script>
+</body>
+</html>
